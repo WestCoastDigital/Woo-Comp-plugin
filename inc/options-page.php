@@ -124,6 +124,14 @@ function sb_setup_settings_options()
     );
 
     add_settings_field(
+        'sb_comp_name',
+        '<h3>Competition Name</h3>',
+        'sb_render_comp_name_field',
+        'sb_comp_options_page',
+        'sb_comp_section'
+    );
+
+    add_settings_field(
         'sb_comp_dates',
         '<h3>Competition Dates</h3>',
         'sb_render_start_and_end_date_fields',
@@ -163,6 +171,7 @@ function sb_setup_settings_options()
         'sb_comp_section'
     );
 
+    register_setting('sb_comp_options_group', 'sb_comp_name');
     register_setting('sb_comp_options_group', 'sb_comp_option');
     register_setting('sb_comp_options_group', 'sb_start_date_option');
     register_setting('sb_comp_options_group', 'sb_end_date_option');
@@ -204,6 +213,12 @@ function sb_render_start_and_end_date_fields()
     echo '</table>';
 }
 
+
+function sb_render_comp_name_field()
+{
+    $value = get_option('sb_comp_name');
+    echo '<input type="text" name="sb_comp_name" value="' . esc_attr($value) . '" size="80" placeholder="' . get_bloginfo('name') . ' Competition" />';
+}
 
 function sb_render_prefix_field()
 {

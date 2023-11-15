@@ -198,6 +198,7 @@ function sb_checkout_page_ticket_announcement()
 
     // Check if the current date is within the competition date range
     $current_date = current_time('mysql');
+
     $current_date = strtotime($current_date);
     if ($current_date < $start_date && $current_date > $end_date) {
         return; // The competition is not active, exit without generating tickets.
@@ -221,8 +222,12 @@ function sb_checkout_page_ticket_announcement()
     }
     // get the plural of entry
     $plural = $ticket_count > 1 ? 'entries' : 'entry';
+    $comp_name = get_option('sb_comp_name') ?? '';
+    if($comp_name == '') {
+        $comp_name = get_bloginfo('name') . ' Competition';
+    }
     // display the ticket qty
-    $content = 'Congratulations - your order entitles you to ' . $ticket_count . ' ' . $plural . ' in the competition';
+    $content = 'Congratulations - your order entitles you to ' . $ticket_count . ' ' . $plural . ' in the ' . $comp_name . '! Please check your inbox for confirmation after you complete your order.';
     echo '<p class="sb-comp-entries">' . esc_html($content) . '</p>';
 }
 add_action('woocommerce_review_order_before_submit', 'sb_checkout_page_ticket_announcement');
