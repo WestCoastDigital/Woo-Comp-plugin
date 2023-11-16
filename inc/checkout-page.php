@@ -2,7 +2,6 @@
 // Hook into the checkout process to generate ticket allocations
 function sb_competition_generate_tickets_on_checkout($order_id)
 {
-
     // Get the excluded user roles from your options page settings
     $excl_roles = get_option('sb_comp_roles');
 
@@ -61,9 +60,10 @@ function sb_competition_generate_tickets_on_checkout($order_id)
     $ticket_count = 0;
 
     // Calculate the ticket count based on the order total and spend thresholds
-    foreach ($spend_thresholds as $threshold => $tickets) {
+    foreach ($spend_thresholds as $tickets) {
+        $threshold = intval($tickets['dollar']);
         if ($order_total >= $threshold) {
-            $entries = $tickets['entries'];
+            $entries = $tickets['qty'];
             // convert entries into integer
             $ticket_count = intval($entries);
         }
@@ -84,7 +84,7 @@ function sb_competition_generate_tickets_on_checkout($order_id)
         $random_ticket_number = mt_rand(1000, 9999); // Example: Generate a random 4-digit number
         // Check the random numbers dont exist in database
         $args = array(
-            'post_type' => 'sb_competition',
+            'post_type' => 'shop_order',
             'meta_query' => array(
                 array(
                     'key' => '_sb_competition_tickets',
@@ -110,7 +110,7 @@ function sb_competition_generate_tickets_on_checkout($order_id)
 }
 
 // Hook into the checkout process
-// add_action('woocommerce_checkout_order_processed', 'sb_competition_generate_tickets_on_checkout', 20);
+add_action('woocommerce_checkout_order_processed', 'sb_competition_generate_tickets_on_checkout', 20);
 add_action('woocommerce_thankyou', 'sb_competition_generate_tickets_on_checkout', 10, 1);
 
 // Function to send a custom email with ticket numbers
